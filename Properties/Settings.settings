@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ServerInfo.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="WMIQuery" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">SELECT Caption,CSName,InstallDate,LastBootUpTime,LocalDateTime,Version FROM Win32_OperatingSystem;SELECT HotFixID,InstalledOn FROM Win32_QuickFixEngineering;Select * from Win32_LogicalDisk where DriveType=3;select * from Win32_Share;Select Caption,State from Win32_Service;Select Name from Win32_NetworkProtocol;Select SystemUpTime From Win32_PerfFormattedData_PerfOS_System;select * from Win32_NetworkAdapterConfiguration Where IPEnabled = True;Select * from Win32_ComputerSystem</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
