@@ -20,13 +20,12 @@ namespace ServerInfo
             {
                 lblErrorMessage.Text = "";
 
-                txtServerName.Text = "Masochist;masochist";
+                txtServerName.Text = "Masochist;masochista";
             }
         }
 
         protected void btnGetServerInfo_Click(object sender, EventArgs e)
-        {
-
+        {   
             if (txtServerName.Text.Length.Equals(0))
             {
                 lblErrorMessage.Text = "No Servers Listed.";
@@ -38,6 +37,8 @@ namespace ServerInfo
                 lblErrorMessage.Text = "No Query's could be found.";
                 return;
             }
+
+           
 
             string[] arrServers = txtServerName.Text.Split(';');
             AppCode.ProgramHelp PH = new AppCode.ProgramHelp();
@@ -52,7 +53,18 @@ namespace ServerInfo
             {
                 
                 scope = new ManagementScope("\\\\" + server + "\\root\\cimv2");
-                scope.Connect();
+                try
+                {
+                    scope.Connect();
+                }
+                catch (Exception ex)
+                {
+                    string servererror = string.Format("{0} - {1}", server, ex.Message);
+
+                    OutputCol += "<td><h2>" + servererror + "<h2>";
+                    continue;
+                }
+                
 
                 
                 int breakloop = 0;
@@ -60,21 +72,20 @@ namespace ServerInfo
                 foreach (string query in Properties.Settings.Default.WMIQuery.Split(';'))
                 {
                     
-                    //CreateHeaderAddLabel(PH.MakeHeaderTitle(query));
-
                     System.Web.UI.WebControls.GridView GVData = PH.CreateGridView();
 
                     GVData.DataSource = PH.OutPutAllwmiSelect(query);
                     GVData.DataBind();
-                    //form1.Controls.Add(GVData);
                     OutputCol += GridViewToHtml(GVData);
                    
                     ///Testing... remove after testing.
+                #if DEBUG
                     if (breakloop.Equals(1))
                         break;
                     else
                         breakloop++;
-                    
+                #endif
+
                 }
  OutputCol += "</td>";
                 
@@ -82,13 +93,15 @@ namespace ServerInfo
 
             }
 OutputCol += "</tr>";
-            Response.Write(OutputCol);
+
+            testp.InnerHtml = OutputCol;
+            
            
 
             scope = null;
             PH.Dispose();
             PH = null;
-
+           
             return;
         }
 
